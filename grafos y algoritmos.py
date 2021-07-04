@@ -110,6 +110,12 @@ class Nodo():
     def unfocus(self):
         self.color_ext = BLANCO
 
+    def isfocus(self):
+        if self.color_ext == BLANCO:
+            return True
+        else:
+            return False
+
 class Grafo():
     # Modos:
     # 0 crear Nodo
@@ -163,6 +169,8 @@ class Grafo():
 
     def cambiarModo(self, select):
         if self.modoE == 1:
+            if len(self.conectando) == 1:
+                self.conectando[0].unfocus()
             self.conectando = []
         if select:
             self.modoE += 1
@@ -185,10 +193,12 @@ class Grafo():
                 if self.modoE == 1:
                     if len(self.conectando) == 0:
                         self.conectando.append(nodo)
+                        nodo.focus()
                     elif len(self.conectando) == 1 and nodo != self.conectando[0]:
                         self.conectando.append(nodo)
                         self.conectarNodos(self.conectando[0], nodo)
                         self.conectarNodos(nodo, self.conectando[0])
+                        self.conectando[0].unfocus()
                         self.conectando = []
                 if self.modoE == 2:
                     self.quitarNodo(nodo)
@@ -200,6 +210,10 @@ class Grafo():
         if not self.colaAnimacion.vacia():
             nodo = self.colaAnimacion.obtener()
             nodo.marcar()
+            if nodo.isfocus():
+                nodo.unfocus()
+            else:
+                nodo.focus()
             time.sleep(tiempo)
             
     def recorridoProfundidad(self, nodo):
