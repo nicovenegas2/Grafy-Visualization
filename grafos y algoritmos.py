@@ -112,9 +112,9 @@ class Nodo():
 
     def isfocus(self):
         if self.color_ext == BLANCO:
-            return True
-        else:
             return False
+        else:
+            return True
 
 class Grafo():
     # Modos:
@@ -252,6 +252,20 @@ class Grafo():
         self.nodoIni = -1
         for nodo in self.nodos:
             nodo.desmarcar()
+
+    def marcarAnimation(self, nodo):
+        self.colaAnimacion.ingresar()
+    
+    def focusAnimation(self, nodo):
+        self.colaAnimacion.ingresar()
+        
+    def unmarkAnimation(self, nodo):
+        self.colaAnimacion.ingresar()
+    
+    def unfocusAnimation(self, nodo):
+        self.colaAnimacion.ingresar()
+    
+    
 
     def actualizar(self):
         self.font = pygame.font.SysFont('Arial',40)
