@@ -1,4 +1,3 @@
-from pruebas.clases import Animal
 import pygame, sys, PYC
 
 from pygame.constants import MOUSEBUTTONUP
