@@ -104,6 +104,12 @@ class Nodo():
             nodoAd.connects.remove(self)
         self.connects = []
         
+    def focus(self):
+        self.color_ext = MORADO
+
+    def unfocus(self):
+        self.color_ext = BLANCO
+
 class Grafo():
     # Modos:
     # 0 crear Nodo
