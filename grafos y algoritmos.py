@@ -208,21 +208,36 @@ class Grafo():
 
     def animar(self, tiempo):
         if not self.colaAnimacion.vacia():
-            nodo = self.colaAnimacion.obtener()
-            nodo.marcar()
-            if nodo.isfocus():
-                nodo.unfocus()
-            else:
-                nodo.focus()
+            variablesAnimation = self.colaAnimacion.obtener()
+            nodo = variablesAnimation[0]
+            mark = variablesAnimation[1]
+            focus = variablesAnimation[2]
+            if focus != -1:
+                if focus:
+                    nodo.focus()
+                else:
+                    nodo.unfocus()
+            if mark != -1:
+                if mark:
+                    nodo.marcar()
+                else:
+                    nodo.desmarcar()
+            
             time.sleep(tiempo)
             
-    def recorridoProfundidad(self, nodo):
+    def recorridoProfundidad(self, nodo, marks):
 
-        self.colaAnimacion.ingresar(nodo)
+        self.markAnimation(nodo)
+        marks.append(nodo)
         self.pila.insertar(nodo)
+        self.focusAnimation(nodo)
         for nodoAd in nodo.connects:
-            if not self.colaAnimacion.existe(nodoAd): # como tenemos que marcarlos despues reviso si estan en la lista para marcar 
-                self.recorridoProfundidad(nodoAd)
+            if nodoAd not in marks:  
+                self.unfocusAnimation(nodo)
+                self.recorridoProfundidad(nodoAd, marks)
+        
+        self.focusAnimation(nodo)
+        self.unfocusAnimation(nodo)
         self.pila.eliminar()
        
     def recorridoAncho(self, nodo):
@@ -252,21 +267,20 @@ class Grafo():
         self.nodoIni = -1
         for nodo in self.nodos:
             nodo.desmarcar()
+            nodo.unfocus()
 
-    def marcarAnimation(self, nodo):
-        self.colaAnimacion.ingresar()
+    def markAnimation(self, nodo):
+        self.colaAnimacion.ingresar((nodo, 1, -1))
     
     def focusAnimation(self, nodo):
-        self.colaAnimacion.ingresar()
+        self.colaAnimacion.ingresar((nodo, -1, 1))
         
     def unmarkAnimation(self, nodo):
-        self.colaAnimacion.ingresar()
+        self.colaAnimacion.ingresar((nodo, 0, -1))
     
     def unfocusAnimation(self, nodo):
-        self.colaAnimacion.ingresar()
+        self.colaAnimacion.ingresar((nodo, -1, 0))
     
-    
-
     def actualizar(self):
         self.font = pygame.font.SysFont('Arial',40)
         labelModo = self.font.render(
@@ -334,7 +348,7 @@ while True:
                 
             if grafo.nodoIni != -1:
                 if evento.key == pygame.K_p:
-                        grafo.recorridoProfundidad(grafo.nodoIni)
+                        grafo.recorridoProfundidad(grafo.nodoIni,[])
                 if evento.key == pygame.K_o:
                     grafo.recorridoAncho(grafo.nodoIni)
 
