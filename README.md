@@ -1,5 +1,5 @@
 # Grafy-Visualization
-Preview and create graphes, visualizate algorithmes (DFS, BFS) in customizable graphes
+Preview and create graphes, visualizate algorithmes (DFS, BFS) in customizable graphes with Pyhame
 
 # buttons:
 - Change mode: Up, Down, A, D, Scroll Up and Down
@@ -11,6 +11,9 @@ Preview and create graphes, visualizate algorithmes (DFS, BFS) in customizable g
 - DFS: P
 - BFS: O 
 
-
 # Requeriments:
 - Pywin32
+
+# Play
+- download files
+- run "grafos y algoritmos.py"
