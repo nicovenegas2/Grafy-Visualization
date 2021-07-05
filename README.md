@@ -10,3 +10,7 @@ Preview and create graphes, visualizate algorithmes (DFS, BFS) in customizable g
 - Unmark all nodes: X
 - DFS: P
 - BFS: O 
+
+
+# Requeriments:
+- Pywin32
