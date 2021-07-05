@@ -129,6 +129,7 @@ class Grafo():
         self.colaAnimacion = PYC.Cola()
         self.nodoIni = -1
         self.move = False
+        self.animando = False
 
     def agregarNodo(self, pos):
         nodo = Nodo(pos, len(self.nodos))
@@ -200,6 +201,7 @@ class Grafo():
 
     def animar(self, tiempo):
         if not self.colaAnimacion.vacia():
+            self.animando = True
             variablesAnimation = self.colaAnimacion.obtener()
             nodo = variablesAnimation[0]
             mark = variablesAnimation[1]
@@ -216,6 +218,8 @@ class Grafo():
                     nodo.desmarcar()
             
             time.sleep(tiempo)
+        else:
+            self.animando = False
             
     def recorridoProfundidad(self, nodo, marks):
 
@@ -234,14 +238,16 @@ class Grafo():
        
     def recorridoAncho(self, nodo):
         self.cola.ingresar(nodo)
-        while self.cola.cantidad != 0:
-            nodoActual = self.cola.actual()
-            self.colaAnimacion.ingresar(nodo) # Marcar
+        marks = []
+        while not self.cola.vacia():
+            nodoActual = self.cola.obtener()
+            self.focusAnimation(nodoActual)
+            self.markAnimation(nodoActual)
             for nodoAd in nodoActual.connects:
-                if not self.colaAnimacion.existe(nodoAd):
-                    self.colaAnimacion.ingresar(nodoAd) # Marcar
+                if nodoAd not in marks:
+                    marks.append(nodoAd)
                     self.cola.ingresar(nodoAd)
-            self.cola.eliminar()
+            self.unfocusAnimation(nodoActual)
             
     def limpiar(self):
         self.nodos = []
@@ -296,7 +302,7 @@ class Grafo():
             nodo.dibujarConexiones()
         for nodo in self.nodos:
             nodo.dibujarNodo()
-        self.animar(0.3)
+        self.animar(0.1)
 
 grafo = Grafo()
 
@@ -309,13 +315,13 @@ while True:
         if evento.type == pygame.QUIT:
             sys.exit(0)
         if evento.type == pygame.MOUSEBUTTONDOWN:
-            if evento.button == 1:
-                grafo.accionMouse(posMouse)
-            if evento.button == 3:
-                grafo.verificarMarcado(posMouse)
+            if not grafo.animando:
+                if evento.button == 1:
+                    grafo.accionMouse(posMouse)
+                if evento.button == 3:
+                    grafo.verificarMarcado(posMouse)
 
         if evento.type == MOUSEBUTTONUP:
-            print(evento.button)
             if evento.button == 1 and grafo.move:
                 grafo.quitarMove()
 
@@ -326,24 +332,26 @@ while True:
                 grafo.cambiarModo(0)
 
         if evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_UP or evento.key == pygame.K_d:
-                grafo.cambiarModo(1)
+            if not grafo.animando:
+                if evento.key == pygame.K_UP or evento.key == pygame.K_d:
+                    grafo.cambiarModo(1)
 
-            if evento.key == pygame.K_DOWN or evento.key == pygame.K_a:
-                grafo.cambiarModo(0)
-            if evento.key == pygame.K_SPACE:
-                grafo.limpiar()
-            if evento.key == pygame.K_c:
-                grafo.eliminarConexiones()
-            if evento.key == pygame.K_x:
-                grafo.desmarcarTodo()
-                
-            if grafo.nodoIni != -1:
-                if evento.key == pygame.K_p:
-                        grafo.recorridoProfundidad(grafo.nodoIni,[])
-                if evento.key == pygame.K_o:
-                    grafo.recorridoAncho(grafo.nodoIni)
-
+                if evento.key == pygame.K_DOWN or evento.key == pygame.K_a:
+                    grafo.cambiarModo(0)
+                if evento.key == pygame.K_SPACE:
+                    grafo.limpiar()
+                if evento.key == pygame.K_c:
+                    grafo.eliminarConexiones()
+                if evento.key == pygame.K_x:
+                    grafo.desmarcarTodo()
+                    
+                if grafo.nodoIni != -1:
+                    if evento.key == pygame.K_p:
+                            grafo.recorridoProfundidad(grafo.nodoIni,[])
+                    if evento.key == pygame.K_o:
+                        grafo.recorridoAncho(grafo.nodoIni)
+                        
+                        
     ventana.fill(FONDO)
     grafo.actualizar()
     pygame.display.flip()
