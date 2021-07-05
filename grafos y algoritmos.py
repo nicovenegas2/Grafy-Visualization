@@ -29,13 +29,6 @@ clock = pygame.time.Clock()
 
 # Funcion para esperar x segundos
 
-def esperar(segundos):
-    tiempo = time.time()
-    actual = time.time()
-    while(actual-tiempo <= segundos):
-        actual = time.time()
-
-
 # Clases de un nodo y un grafo
 
 class Nodo():
@@ -58,9 +51,6 @@ class Nodo():
         self.color_in = BLANCO
         self.color_label = NEGRO
         self.mark = True
-        sys.stdout.flush()
-        if tiempo > 0:
-            esperar(tiempo)
    
     def desmarcar(self):
         self.color_label = BLANCO
@@ -72,13 +62,15 @@ class Nodo():
             self.connects.append(nodo)
     
     def desconectar(self, nodo):
+        #desconecta el nodo de otro dado
         if nodo in self.connects:
             self.connects.remove(nodo)
 
     def dibujarNodo(self):
+        # Dibujo del nodo con todos sus componentes
         self.size = SIZE[1]*0.043
         self.draw_in = pygame.draw.circle(ventana, self.color_in, self.pos, self.size)
-        self.draw_ext = pygame.draw.circle(ventana, self.color_ext, self.pos, self.size, 3)
+        self.draw_ext = pygame.draw.circle(ventana, self.color_ext, self.pos, self.size, 5)
 
         self.font = pygame.font.SysFont('Arial',40)
         self.label = self.font.render(f'{self.name}', True, self.color_label)
@@ -227,16 +219,16 @@ class Grafo():
             
     def recorridoProfundidad(self, nodo, marks):
 
-        self.markAnimation(nodo)
+        self.focusAnimation(nodo)
         marks.append(nodo)
         self.pila.insertar(nodo)
-        self.focusAnimation(nodo)
+        self.markAnimation(nodo)
         for nodoAd in nodo.connects:
             if nodoAd not in marks:  
                 self.unfocusAnimation(nodo)
                 self.recorridoProfundidad(nodoAd, marks)
+                self.focusAnimation(nodo)
         
-        self.focusAnimation(nodo)
         self.unfocusAnimation(nodo)
         self.pila.eliminar()
        
@@ -304,7 +296,7 @@ class Grafo():
             nodo.dibujarConexiones()
         for nodo in self.nodos:
             nodo.dibujarNodo()
-        self.animar(0.1)
+        self.animar(0.3)
 
 grafo = Grafo()
 
