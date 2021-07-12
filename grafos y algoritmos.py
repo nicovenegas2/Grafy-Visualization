@@ -11,7 +11,7 @@ pygame.font.init()
 
 
 # Colores
-NEGRO = (0, 0, 0)
+NEGRO = (1, 0, 0)
 BLANCO = (255, 255, 255)
 ROJO = (255, 0, 0)
 VERDE = (0, 255, 0)
